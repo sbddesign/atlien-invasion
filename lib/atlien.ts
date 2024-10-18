@@ -1,3 +1,5 @@
+import {createHash} from 'crypto';
+
 const atlienAdjectiveList = [
     "adorable",
     "adventurous",
@@ -925,6 +927,17 @@ const atlienFavoriteMusicVenue = [
 
 type AtlienFavoriteMusicVenue = typeof atlienFavoriteMusicVenue;
 
+function selectFromList<T>(uniqueNumber: number, list: readonly T[], offset: number): T {
+    const index = (uniqueNumber + offset) % list.length;
+    return list[index];
+}
+
+function selectNumberInRange(uniqueNumber: number, min: number, max: number, offset: number): number {
+    const range = max - min + 1;
+    const adjustedNumber = (uniqueNumber + offset) % range;
+    return min + adjustedNumber;
+}
+
 type Atlien = {
     latitude: number;
     longitude: number;
@@ -939,6 +952,31 @@ type Atlien = {
     favoriteMusicVenue: AtlienFavoriteMusicVenue;
     martaCardValue: number; // Decimal value to USD
 }
-export function findAtlien(latitude:number, longitude:number) {
-    // Convert lat and long to a number
+
+export function findAtlien(latitude: number, longitude: number) {
+    // Concatenate latitude and longitude into a string
+    const latLongString = `${latitude},${longitude}`;
+
+    // Create a SHA-256 hash of the string
+    const hash = createHash('sha256').update(latLongString).digest('hex');
+
+    // Convert the first 16 characters of the hash to an integer
+    const uniqueNumber = parseInt(hash.slice(0, 16), 16);
+
+    // Determine string stats 
+    const rawAdjective = selectFromList(uniqueNumber, atlienAdjectiveList, 13945677);
+    const adjective = rawAdjective.charAt(0).toUpperCase() + rawAdjective.slice(1);
+    const name = selectFromList(uniqueNumber, atlienNameList, 456);
+    const neighborhood = selectFromList(uniqueNumber, atlienNeighborhoodList, 789);
+    const species = selectFromList(uniqueNumber, atlienSpeciesList, 234);
+    const favoriteColor = selectFromList(uniqueNumber, atlienFavoriteColorList, 567);
+    const wingsPreference = selectFromList(uniqueNumber, atlienWingsPreferenceList, 890);
+    const favoriteMusicVenue = selectFromList(uniqueNumber, atlienFavoriteMusicVenue, 345);
+
+    // Determine number stats
+    const singingAbility = selectNumberInRange(uniqueNumber, 1, 10, 111);
+    const martaCardValue = selectNumberInRange(uniqueNumber, 0, 100, 222);
+    const driversLicensePoints = selectNumberInRange(uniqueNumber, 0, 15, 1);
+
+    return { latitude, longitude, uniqueNumber, adjective, name, neighborhood, species, favoriteColor, wingsPreference, favoriteMusicVenue, singingAbility, martaCardValue, driversLicensePoints };
 }

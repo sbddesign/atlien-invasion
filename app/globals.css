@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1, h2, h3, h4, h5, h6 {
+    @apply font-bold mb-1;
+}
+
+p {
+    @apply mb-1;
+}
+
+a {
+    @apply underline text-orange-600;
+}
