@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma";
+
 export default function NewBounty() {
   return (
     <div className="">
