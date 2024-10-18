@@ -22,7 +22,7 @@ There was a lab leak at [ATL BitLab](https://atlbitlab.com).
 
 ## Dev Instructions
 
-Start local DB: `npx prisma migrate dev --name init`
+Create local DB the first time: `npx prisma migrate dev --name init`
 
 Run the development server:
 
