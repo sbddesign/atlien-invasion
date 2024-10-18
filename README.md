@@ -22,7 +22,9 @@ There was a lab leak at [ATL BitLab](https://atlbitlab.com).
 
 ## Dev Instructions
 
-First, run the development server:
+Start local DB: `npx prisma migrate dev --name init`
+
+Run the development server:
 
 `yarn dev`
 
