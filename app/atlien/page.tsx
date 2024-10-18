@@ -2,7 +2,7 @@ import { findAtlien } from "@/lib/atlien";
 
 export default function Atlien() {
 
-    const atlien = findAtlien(4,9);
+    const atlien = findAtlien(1,122.454545);
 
   return (
     <div className="max-w-4xl w-full mx-auto p-8 mt-8 border border-gray-500 rounded">
