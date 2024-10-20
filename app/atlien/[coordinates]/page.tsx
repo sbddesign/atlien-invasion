@@ -48,7 +48,7 @@ export default function Atlien({ params }: {params: { coordinates: string } }) {
         <h2>MARTA Card Value</h2>
         <p>${atlien.martaCardValue.toFixed(2)}</p>
 
-        <h2>Driver's License Points</h2>
+        <h2>Driver&rsquo;s License Points</h2>
         <p>{atlien.driversLicensePoints}</p>
     </div>
   );
