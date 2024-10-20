@@ -16,7 +16,7 @@ export default function NostrAuth() {
         if (typeof window !== 'undefined' && window.nostr) {
             window.nostr.getPublicKey().then(async (publicKey) => {
                 console.log(publicKey);
-                let npub = nip19.npubEncode(publicKey);
+                const npub = nip19.npubEncode(publicKey);
                 console.log(npub);
 
                 // Make a POST request to /api/nostr/auth
