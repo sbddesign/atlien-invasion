@@ -12,7 +12,6 @@
      npub       String    @unique
      name       String?
      createdAt  DateTime  @default(now())
-
      bounties   Bounty[]  @relation("UserBounties")
      claims     Bounty[]  @relation("UserClaims")
    }
