@@ -44,6 +44,18 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
+"@fedimint/core-web@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@fedimint/core-web/-/core-web-0.0.7.tgz#8026ef83d3967bccae6ca0709a0d9d8b1605a371"
+  integrity sha512-Sr4NUwOUDfQkopjkrAl+MeNR8taUzUaOdX4ZbCsOodT3gj4aNtJRLOTCotpCoHrmiqQZcfGkxYKY3ANgpgJsaw==
+  dependencies:
+    "@fedimint/fedimint-client-wasm-bundler" "0.0.2"
+
+"@fedimint/fedimint-client-wasm-bundler@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@fedimint/fedimint-client-wasm-bundler/-/fedimint-client-wasm-bundler-0.0.2.tgz#8ce9b941d8bfcf6251270c01f97e62f6a41bf378"
+  integrity sha512-+6chBN4sItrPTS792na6ZZJL3OlZf+edzhy0W40B8PULesjRURV0DbCmR4mCdg+QHds3CkuKkISn/UQpN/cDdQ==
+
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.13.0.tgz#fb907624df3256d04b9aa2df50d7aa97ec648748"
