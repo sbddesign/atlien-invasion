@@ -27,6 +27,11 @@ export default function Header() {
             href: '/bounty/new',
             text: 'New Bounty'
         }
+        ,
+        {
+            href: '/coords',
+            text: 'Coords (Dev)'
+        }
     ];
 
     const toggleNav = () => {
