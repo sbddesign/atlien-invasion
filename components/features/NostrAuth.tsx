@@ -1,17 +1,6 @@
 "use client";
 import { useEffect } from 'react';
-import { nip19 } from 'nostr-tools';
-import { sign } from 'crypto';
-
-// // Add this declaration at the top of your file or in a separate declaration file
-// declare global {
-//     interface Window {
-//         nostr?: {
-//             getPublicKey: () => Promise<string>;
-//             signEvent: (event: any) => Promise<any>;
-//         };
-//     }
-// }
+import { EventTemplate, nip19 } from 'nostr-tools';
 
 export default function NostrAuth() {
     useEffect(() => {
@@ -19,7 +8,7 @@ export default function NostrAuth() {
 
             const nostr = window.nostr;
 
-            let authEvent = {
+            const authEvent:EventTemplate = {
                 kind: 27235,
                 created_at: Math.floor(Date.now() / 1000),
                 tags: [
@@ -29,8 +18,7 @@ export default function NostrAuth() {
                 content: '',
             }
 
-
-            let signedEvent = nostr.signEvent(authEvent);
+            const signedEvent = nostr.signEvent(authEvent);
 
             console.log(signedEvent);
 

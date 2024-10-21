@@ -1,6 +1,7 @@
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { verifyEvent } from 'nostr-tools';
+import { nip19 } from 'nostr-tools';
 
 export async function POST(request: Request) {
     try {
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
             decodedString = atob(base64String);
             signedEvent = JSON.parse(decodedString);
         } catch (error) {
+            console.log(error);
             return NextResponse.json({ error: 'Invalid Base64 or JSON format' }, { status: 400 });
         }
 
@@ -44,8 +46,37 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invalid event data' }, { status: 400 });
         }
 
-        // Proceed with your logic if the event is valid
-        return NextResponse.json({ status: 'success' });
+        const npub = nip19.npubEncode(signedEvent.pubkey);
+
+        const prisma = new PrismaClient();
+
+        // Check if user exists or create a new one
+        let user = await prisma.user.findUnique({
+            where: { npub },
+        });
+
+        if (!user) {
+            console.log('no user found');
+            user = await prisma.user.create({
+                data: { npub },
+            });
+        }
+
+        // Parse request body for bounty details
+        const { coordinates, ecash } = await request.json();
+
+        // Create a new bounty
+        const bounty = await prisma.bounty.create({
+            data: {
+                authorId: user.id,
+                amount: 0, // Set amount to 0 for now
+                ecash,
+                coordinates,
+                active: true,
+            },
+        });
+
+        return NextResponse.json({ status: 'success', bounty });
     } catch (error) {
         console.error('Error in /api/bounties/new:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export default function CreateBountyButton() {
     const [responseMessage, setResponseMessage] = useState('');
-    const [coordinates, setCoordinates] = useState('');
+    const [coordinates, setCoordinates] = useState('@33.759752,-84.36487901)');
     const [ecash, setEcash] = useState('');
 
     const createBounty = async () => {
