@@ -31,13 +31,13 @@ export async function POST(request: Request) {
         }
 
         // Parse request body for bounty details
-        const { coordinates, ecash } = await request.json();
+        const { coordinates, ecash, amount } = await request.json();
 
         // Create a new bounty
         const bounty = await prisma.bounty.create({
             data: {
                 authorId: user.id,
-                amount: 0, // Set amount to 0 for now
+                amount, // Set amount to 0 for now
                 ecash,
                 coordinates,
                 active: true,

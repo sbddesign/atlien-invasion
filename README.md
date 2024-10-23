@@ -7,7 +7,7 @@ There was a lab leak at [ATL BitLab](https://atlbitlab.com).
 ### Must Haves
 
 - [x] Create new user profile
-- [ ] Create new ecash wallet
+- [x] Create new ecash wallet
 - [x] See list of bounties
 - [x] Create bounty
 - [ ] Start bounty challenge
