@@ -19,7 +19,7 @@ export default function CreateBountyUI() {
     const {wallet} = useWallet();
 
     const createBounty = async () => {
-        let thisEcash = await getEcash(amount);
+        const thisEcash = await getEcash(amount);
 
         console.log(thisEcash.notes)
         try {
@@ -45,7 +45,7 @@ export default function CreateBountyUI() {
                 console.log('amount', amount)
                 console.log('thisEcash', thisEcash.notes);
 
-                let deezNotes = thisEcash.notes;
+                const deezNotes = thisEcash.notes;
 
                 const response = await fetch('/api/bounties/new', {
                     method: 'POST',
@@ -77,7 +77,7 @@ export default function CreateBountyUI() {
 
 
     const getEcash = async (amt:number)=>{
-        let balance = await wallet.balance.getBalance();
+        const balance = await wallet.balance.getBalance();
         console.log('got balance: ', balance);
 
         const notesToSpend = await wallet.mint.spendNotes(amt, 31536000);

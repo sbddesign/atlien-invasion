@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { verifyEvent } from 'nostr-tools';
 
 export async function verifySignedEvent(authHeader: string|null, expectedMethod: string, expectedUri: string) {

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { prisma } from '@/lib/prisma';
 import { findAtlien } from "@/lib/atlien";
 import Definition from "@/components/Definition";
