@@ -1,50 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
-import { verifyEvent } from 'nostr-tools';
 import { nip19 } from 'nostr-tools';
+import { verifySignedEvent } from '@/lib/verifyApiSignedEvent';
 
 export async function POST(request: Request) {
     try {
         const authHeader = request.headers.get('Authorization');
+        const verificationResult = await verifySignedEvent(authHeader, 'POST', 'https://atliens.atlbitlab.com/api/bounties/new');
 
-        if (!authHeader || !authHeader.startsWith('Nostr ')) {
-            return NextResponse.json({ error: 'Invalid Authorization header format' }, { status: 401 });
+        if (verificationResult.error) {
+            return NextResponse.json({ error: verificationResult.error }, { status: verificationResult.status });
         }
 
-        const base64String = authHeader.slice(6); // Remove 'Nostr ' prefix
-        let decodedString;
-        let signedEvent;
-
-        try {
-            decodedString = atob(base64String);
-            signedEvent = JSON.parse(decodedString);
-        } catch (error) {
-            console.log(error);
-            return NextResponse.json({ error: 'Invalid Base64 or JSON format' }, { status: 400 });
-        }
-
-        const isValid = verifyEvent(signedEvent);
-
-        if (!isValid) {
-            return NextResponse.json({ error: 'Invalid signed event' }, { status: 401 });
-        }
-
-        // Additional checks
-        const currentTime = Math.floor(Date.now() / 1000);
-        const tenSecondsAgo = currentTime - 10;
-
-        const hasUTag = signedEvent.tags.some((tag: [string, string]) => tag[0] === 'u' && tag[1] === 'https://atliens.atlbitlab.com/api/bounties/new');
-        const hasMethodTag = signedEvent.tags.some((tag: [string, string]) => tag[0] === 'method' && tag[1] === 'POST');
-
-        if (
-            !hasUTag ||
-            !hasMethodTag ||
-            signedEvent.kind !== 27235 ||
-            signedEvent.content !== '' ||
-            signedEvent.created_at < tenSecondsAgo
-        ) {
-            return NextResponse.json({ error: 'Invalid event data' }, { status: 400 });
-        }
+        const signedEvent = verificationResult.signedEvent;
 
         const npub = nip19.npubEncode(signedEvent.pubkey);
 

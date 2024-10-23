@@ -1,64 +1,73 @@
 "use client";
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { EventTemplate, nip19 } from 'nostr-tools';
 
 export default function NostrAuth() {
-    useEffect(() => {
-        if (typeof window !== 'undefined' && window.nostr) {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    useEffect(() => {
+        // Check local storage for npub to determine login status
+        const npub = localStorage.getItem('atl_user_npub');
+        setIsLoggedIn(!!npub);
+    }, []);
+
+    const nostrAuth = async () => {
+        if (typeof window !== 'undefined' && window.nostr) {
             const nostr = window.nostr;
 
-            const authEvent:EventTemplate = {
+            const authEvent: EventTemplate = {
                 kind: 27235,
                 created_at: Math.floor(Date.now() / 1000),
                 tags: [
-                    ["u", "https://atliens.atlbitlab.com"],
-                    ["method", "GET"]
+                    ["u", "https://atliens.atlbitlab.com/api/nostr/auth"],
+                    ["method", "POST"]
                 ],
                 content: '',
-            }
+            };
 
-            const signedEvent = nostr.signEvent(authEvent);
+            try {
+                const signedEvent = await nostr.signEvent(authEvent);
+                const signedEventBase64 = btoa(JSON.stringify(signedEvent));
 
-            console.log(signedEvent);
+                const response = await fetch('/api/nostr/auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Nostr ${signedEventBase64}`,
+                    },
+                    body: '',
+                });
 
-            window.nostr.getPublicKey().then(async (publicKey) => {
-                console.log(publicKey);
-                const npub = nip19.npubEncode(publicKey);
-                console.log(npub);
-
-                
-
-                // Make a POST request to /api/nostr/auth
-                try {
-                    const response = await fetch('/api/nostr/auth', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ npub }),
-                    });
-
-                    if (response.ok) {
-                        const userData = await response.json();
-                        console.log('User data:', userData);
-                    } else {
-                        console.error('Error fetching user data:', response.statusText);
-                    }
-                } catch (error) {
-                    console.error('Error during authentication:', error);
+                if (response.ok) {
+                    const userData = await response.json();
+                    console.log('User data:', userData);
+                    localStorage.setItem('atl_user_npub', nip19.npubEncode(signedEvent.pubkey));
+                    setIsLoggedIn(true); // Update login status
+                } else {
+                    console.error('Error fetching user data:', response.statusText);
+                    logout();
                 }
-            }).catch((error) => {
-                console.error('Error getting public key:', error);
-            });
+            } catch (error) {
+                console.error('Error during authentication:', error);
+                logout();
+            }
         } else {
-            console.log('window.nostr is not available');
+            console.log('Can\'t find Nost browser extension');
+            logout();
         }
-    }, []);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('atl_user_npub');
+        setIsLoggedIn(false); // Update login status
+        console.log('Logged out');
+    };
 
     return (
-        <>
-            Nostr Login
-        </>
+        <div>
+            <button onClick={nostrAuth}>Login</button>
+            <button onClick={logout}>Logout</button>
+            <p>{isLoggedIn ? 'Logged in' : 'Logged out'}</p> {/* Display login status */}
+        </div>
     );
 }
